@@ -1,0 +1,115 @@
+centos7 + httpd
+
+# centos 更新
+  sudo yum -y update
+  sudo yum -y upgrade
+  sudo yum -y install epel-release
+  sudo yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
+# install apache
+  sudo yum -y install httpd httpd-tools
+  sudo systemctl enable --now httpd
+  sudo systemctl status httpd.service
+  
+  sudo vim /etc/httpd/conf/httpd.conf
+  ***
+    Apache不顯示目錄
+    *註解index
+    #Options Indexes FollowSymLinks
+    IncludeOptional conf.d/*.conf
+  ***
+  
+# install mariadb
+  sudo yum -y install mariadb-server mariadb
+  sudo systemctl enable --now mariadb
+
+  ***
+    設定Mariadb
+    sudo mysql_secure_installation
+      — 設定 root 帳號密碼 (第一次直接Enter)
+      — 是否移除匿名帳號
+      — 是否允許 root 帳號遠端登入
+      — 是否移除 test 資料庫
+      — 是否重新加載權限表
+      
+    *用預設密碼進入Mysql
+    mysql -u root -p
+  ***
+  
+# install php
+  sudo yum -y install yum-utils
+  sudo yum repolist all |grep php
+  sudo yum-config-manager --enable remi-php80
+  sudo yum -y install php php-cli php-fpm php-mysqlnd php-zip php-devel php-gd php-mcrypt php-mbstring php-curl php-xml php-pear php-bcmath php-json php-redis
+
+
+# Opcache PHP
+  sudo yum -y install php-opcache
+  sudo vim /etc/php.d/10-opcache.ini
+  
+  ***
+    opcache.enable_cli=1
+    opcache.memory_consumption=128
+    opcache.interned_strings_buffer=8
+    opcache.max_accelerated_files=4000
+    opcache.revalidate_freq=60
+    opcache.fast_shutdown=1
+  ***
+
+# install phpmyadmin
+  sudo yum -y install dnf
+  sudo dnf --enablerepo=remi,remi-test install phpMyAdmin
+  sudo vim /etc/httpd/conf.d/phpMyAdmin.conf
+ 
+  *新增自己的IP
+  ---
+  <Directory /usr/share/phpMyAdmin/>
+    AddDefaultCharset UTF-8
+
+    Require local
+    Require ip {ip}
+    Allow from 1.1.1.1
+  </Directory>
+  ---
+  
+  
+ # 綁定多個網站
+ 
+  cd /etc/httpd/conf.d
+  touch {name}.conf ex:2020movie.cn.conf
+
+  ***
+    <VirtualHost *:80>  
+      ServerName 2020movie.cn  
+      ServerAlias 2020movie.cn  
+      ServerAdmin jingm830@gmail.com  
+      DocumentRoot /websites/2020movie.cn  
+
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+
+      <Directory /websites/2020movie.cn>  
+        Options Indexes FollowSymLinks  
+        AllowOverride All  
+        Require all granted  
+      </Directory>  
+    </VirtualHost>
+  ***
+  
+  
+# 添加權限
+  sudo chown -R apache:root /var/www/html
+
+# 永久連結
+  sudo vim .htaccess
+
+  ***
+    <IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    RewriteBase /
+    RewriteRule ^index\.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+    </IfModule>
+  ***
