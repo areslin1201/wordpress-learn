@@ -113,3 +113,14 @@ centos7 + httpd
     RewriteRule . /index.php [L]
     </IfModule>
   ***
+  
+# 設定php.ini
+  sudo vim /etc/php.ini
+  
+  ***
+    upload_max_filesize = 16M
+    post_max_size = 32M
+    memory_limit = 256M
+    max_execution_time = 0
+    max_input_time = 0
+  ***
