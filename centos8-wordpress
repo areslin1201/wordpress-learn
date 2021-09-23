@@ -9,7 +9,7 @@
 	sudo vim /etc/yum.repos.d/nginx.repo
   
 	***
-    填入以下內容
+    		填入以下內容
 		https://github.com/areslin1201/wordpress-learn/blob/main/nginx.repo
 	***
 
@@ -67,7 +67,7 @@
 	sudo vim ngx_cache_purge-2.3/config
 
 	***
-    更換填入以下內容
+    		更換填入以下內容
 		https://github.com/areslin1201/wordpress-learn/blob/main/ngx_cache_purge-2.3-config
 	***
 
@@ -97,8 +97,8 @@
 	sudo vim /etc/nginx/nginx.conf
 	
 	***
-    更換以下內容
-    https://github.com/areslin1201/wordpress-learn/create/main/nginx.conf
+    		更換以下內容
+    		https://github.com/areslin1201/wordpress-learn/blob/main/nginx.conf
 	***
 
 # 設定獨立設定檔
