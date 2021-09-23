@@ -1,0 +1,148 @@
+## https://www.footmark.info/linux/centos/nginx-cache-purge-dynamic-module/
+
+# centos 8 更新
+  sudo yum -y update
+  sudo yum -y upgrade
+
+# nginx
+	sudo yum install yum-utils -y
+	sudo vim /etc/yum.repos.d/nginx.repo
+  
+	***
+    填入以下內容
+		https://github.com/areslin1201/wordpress-learn/blob/main/nginx.repo
+	***
+
+	sudo yum-config-manager --enable nginx-stable
+
+	# check nginx version
+	sudo yum info nginx
+
+	sudo yum -y install nginx
+	sudo systemctl enable --now nginx
+
+# MariaDB
+	sudo dnf -y install mariadb-server
+	sudo systemctl enable --now mariadb
+	sudo mysql_secure_installation
+
+	sudo mysql -u root -p
+
+# PHP
+	sudo dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+	sudo dnf -y module list php
+	sudo dnf -y module enable php:remi-8.0
+	sudo dnf -y install php php-cli php-common php-mysqlnd php-gd php-mbstring php-curl php-json
+
+# PHP-FPM
+	sudo dnf -y install php-fpm
+	sudo systemctl enable --now php-fpm
+	sudo vim /etc/php-fpm.d/www.conf
+
+	***
+		;user = apache
+		user = nginx
+
+		;group = apache
+		group = nginx
+	***
+
+	sudo chown nginx:nginx /var/lib/php/session/
+	ls -ald /var/lib/php/session/
+
+# wordpress 下載
+	sudo yum -y install wget unzip
+	sudo find /var/www/html/ -type d -exec chmod 2775 {} \;
+	sudo find /var/www/html/ -type f -exec chmod 664 {} \;
+
+	sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/wordpress/
+
+# 下載 ngx_cache_purge 模塊
+	sudo -i
+
+	sudo dnf -y install gcc-c++ pcre-devel zlib-devel make unzip libuuid-devel
+
+	sudo wget http://labs.frickle.com/files/ngx_cache_purge-2.3.tar.gz
+	sudo tar zxf ngx_cache_purge-2.3.tar.gz
+	sudo vim ngx_cache_purge-2.3/config
+
+	***
+    更換填入以下內容
+		https://github.com/areslin1201/wordpress-learn/blob/main/ngx_cache_purge-2.3-config
+	***
+
+	
+	# 二進位檔案
+	# 不同版本http://nginx.org/en/download.html
+	sudo wget http://nginx.org/download/nginx-1.20.1.tar.gz
+	sudo tar zxf nginx-1.20.1.tar.gz
+	cd nginx-1.20.1
+
+	sudo ./configure --add-dynamic-module=/root/ngx_cache_purge-2.3 --with-compat
+	sudo make modules
+	ll objs/
+
+	nginx -V
+	#檢查以下路徑
+		configure arguments: --prefix=/etc/nginx --sbin-path=/usr/sbin/nginx --modules-path=/usr/lib64/nginx/modules --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log  # ... 後續省略 ...
+	#檢查以下路徑
+
+	ll /etc/nginx/modules
+	sudo cp objs/ngx_http_cache_purge_module.so /usr/lib64/nginx/modules/
+	cd ~
+	sudo rm -rf ng*
+	sudo setsebool -P httpd_execmem 1
+
+# set nginx nginx.conf
+	sudo vim /etc/nginx/nginx.conf
+	
+	***
+    更換以下內容
+    https://github.com/areslin1201/wordpress-learn/create/main/nginx.conf
+	***
+
+# 設定獨立設定檔
+	sudo vim /etc/nginx/conf.d/madjkw.com.conf
+
+	***
+    新增以下內容
+    https://github.com/areslin1201/wordpress-learn/blob/main/*.conf
+	***
+
+# 設定 php fastcgi
+	sudo vim /etc/nginx/default.d/php.conf
+
+	***
+    更改以下內容
+    https://github.com/areslin1201/wordpress-learn/blob/main/php.conf
+	***
+
+# 設定共用設定檔
+	sudo mkdir /etc/nginx/global
+	sudo vim /etc/nginx/global/restrictions.conf
+
+	***
+    新增以下內容
+    https://github.com/areslin1201/wordpress-learn/blob/main/restrictions.conf
+	***
+
+	sudo vim /etc/nginx/global/no-cache.conf
+
+	***
+    新增以下內容
+    https://github.com/areslin1201/wordpress-learn/blob/main/no-cache.conf
+	***
+
+# 檢驗 NGINX 設定檔
+	sudo nginx -t
+	sudo systemcrl restart nginx
+
+# WordPress 繞過 FTP
+  sudo vim wp-config.php
+  
+  *插入下列這行指令
+  define('FS_METHOD', 'direct');
+
+# 添加權限
+	sudo chown -R nginx:nginx /website/ffbnmo.com/wordpress/
+	
