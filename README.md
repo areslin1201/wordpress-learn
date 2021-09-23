@@ -5,5 +5,8 @@
 
 ## 優化
 1. memory limit 256M
-2. 圖片壓縮
-3. 緩存外掛
+2. wp-config.php 添加   define('DISABLE_WP_CRON', true);
+3. 圖片壓縮
+4. 使用WEBP (WebP Converter for Media)
+5. 緩存外掛 (https://onlinemediamasters.com/wp-rocket-settings/)
+6. 
