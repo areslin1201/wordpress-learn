@@ -95,6 +95,8 @@ centos7 + httpd
     </VirtualHost>
   ***
   
+# 繞過FTP
+  define('FS_METHOD', 'direct');
   
 # 添加權限
   sudo chown -R apache:root /var/www/html
@@ -124,3 +126,16 @@ centos7 + httpd
     max_execution_time = 0
     max_input_time = 0
   ***
+  
+# Redis
+# centos7 install redis5
+	sudo yum install -y https://repo.ius.io/ius-release-el7.rpm
+	sudo yum -y install redis5
+	sudo systemctl enable --now redis
+	sudo systemctl status redis
+
+# install redis php
+	sudo yum install php-pecl-redis
+
+# 建立權限
+	sudo /usr/sbin/setsebool httpd_can_network_connect=1
