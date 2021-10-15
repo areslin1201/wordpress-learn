@@ -123,7 +123,7 @@ add_header X-Cache $upstream_cache_status;
 <!-- madjkw.com.conf -->
 server {
     listen       80;
-    server_name  madjkw.com;
+    server_name  madjkw.com www.madjkw.com;
     index  index.php;
     root  /usr/share/nginx/html/wordpress;
 
