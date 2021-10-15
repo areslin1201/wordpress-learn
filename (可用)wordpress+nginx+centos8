@@ -1,3 +1,5 @@
+/* https://www.ichiayi.com/tech/centos8_wordpress
+
 # 更新檔案
   sudo yum -y update
   sudo yum -y upgrade
@@ -49,8 +51,8 @@
 # 編輯 Nginx 全局檔案 - restrictions.conf && no-cache.conf
   sudo mkdir /etc/nginx/global
   cd global
-  sudo vim restrictions.conf
-  sudo vim no-cache.conf
+  sudo vim /etc/nginx/global/restrictions.conf
+  sudo vim /etc/nginx/global/no-cache.conf
   
   ***
   https://github.com/areslin1201/wordpress-learn/blob/main/customfile
