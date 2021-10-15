@@ -1,0 +1,118 @@
+# 更新檔案
+  sudo yum -y update
+  sudo yum -y upgrade
+  sduo yum -y install dnf
+
+
+# 安裝 PHP
+  sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+  sudo dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+  sudo dnf module list php
+  sudo dnf module enable php:remi-8.0
+  sudo dnf -y install php php-fpm
+  sudo systemctl enable --now php-fpm
+  sudo systemctl status php-fpm
+
+
+# 安裝 Nginx
+  sudo vim /etc/yum.repos.d/nginx.repo
+
+  ***
+  [nginx]
+  name=nginx repo
+  baseurl=http://nginx.org/packages/centos/8/$basearch/
+  gpgcheck=0
+  enabled=1
+  ***
+
+  sudo dnf -y install nginx
+  sudo systemctl enable --now nginx
+  sudo systemctl status nginx
+
+
+# 安裝 MariaDb
+  sudo dnf -y install mariadb-server
+  sudo systemctl enable --now mariadb
+  sudo systemctl status mariadb
+  sudo mysql_secure_installation
+  sudo mysql -u root -p
+  
+ 
+# 編輯 Nginx 預設檔 - default.conf
+  sudo vim /etc/nginx/conf.d/default.conf
+  
+  ***
+  https://github.com/areslin1201/wordpress-learn/blob/main/customfile
+  ***
+  
+  
+# 編輯 Nginx 全局檔案 - restrictions.conf && no-cache.conf
+  sudo mkdir /etc/nginx/global
+  cd global
+  sudo vim restrictions.conf
+  sudo vim no-cache.conf
+  
+  ***
+  https://github.com/areslin1201/wordpress-learn/blob/main/customfile
+  ***
+  
+  
+# 編輯 php.ini
+  sudo vim /etc/php.ini
+  
+  ***
+  ;cgi.fix_pathinfo=1
+  cgi.fix_pathinfo=0
+  :
+  [Date]
+  :
+  date.timezone = Asia/Taipei
+  ***
+
+# 編輯 php-fpm.d
+  sudo vim /etc/php-fpm.d/www.conf
+
+  ***
+  ; Default Values: user and group are set as the running user
+  ;                 mode is set to 0660
+  listen.owner = nobody
+  listen.group = nobody
+  ;listen.mode = 0660
+  ***
+  
+
+# 更新 php 附屬安裝 + opcache 緩存設定
+  sudo dnf -y install php-mysqlnd php-mbstring php-xmlrpc php-soap php-gd php-xml php-intl php-zip php-curl php-cli php-redis php-json php-opcache
+  sudo vim /etc/php.d/10-opcache.ini
+
+  ***
+  opcache.enable_cli=1
+  opcache.memory_consumption=128
+  opcache.interned_strings_buffer=8
+  opcache.max_accelerated_files=4000
+  opcache.revalidate_freq=60
+  opcache.fast_shutdown=1
+  ***
+
+
+# 重新啟動
+  sudo systemctl restart php-fpm
+  sudo systemctl restart nginx
+
+
+# 安裝 wordpress
+  sudo dnf -y install wget unzip
+  cd /usr/share/nginx/html
+  sudo wget https://tw.wordpress.org/latest-zh_TW.zip
+  unzip *.zip
+  
+  sudo chown -R apache:apache wordpress
+  sudo vim /etc/nginx/conf.d/madjkw.com.conf
+
+  ***
+  https://github.com/areslin1201/wordpress-learn/blob/main/customfile
+  ***
+  
+
+# 關閉 SELinux
+  sudo setenforce 0
