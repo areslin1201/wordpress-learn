@@ -119,3 +119,28 @@
 
 # 關閉 SELinux
   sudo setenforce 0
+
+
+# 安裝 Redis
+  sudo dnf -y install redis
+  sudo systemctl enable --now redis
+  sudo systemctl status redis
+
+  ss -ant | grep 6379
+  *check this
+  LISTEN     0        128             127.0.0.1:6379              0.0.0.0:*
+  *
+
+
+# configure redis cache
+  redis-cli
+
+  127.0.0.1:6379>ping
+  *check
+  PONG
+  *
+
+  127.0.0.1:6379>keys *
+  *
+  add new keys
+  *
