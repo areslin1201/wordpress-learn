@@ -3,7 +3,7 @@
 # 更新檔案
   sudo yum -y update
   sudo yum -y upgrade
-  sduo yum -y install dnf
+  sudo yum -y install dnf
 
 
 # 安裝 PHP
