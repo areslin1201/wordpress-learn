@@ -9,8 +9,8 @@
 # 安裝 PHP
   sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
   sudo dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
-  sudo dnf module list php
-  sudo dnf module enable php:remi-8.0
+  sudo dnf -y module list php
+  sudo dnf -y module enable php:remi-8.0
   sudo dnf -y install php php-fpm
   sudo systemctl enable --now php-fpm
   sudo systemctl status php-fpm
