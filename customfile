@@ -63,10 +63,15 @@ location = /favicon.ico {
     access_log off;
 }
  
+#location = /robots.txt {
+#    allow all;
+#    log_not_found off;
+#    access_log off;
+#}
 location = /robots.txt {
-    allow all;
-    log_not_found off;
+    try_files $uri $uri/ /index.php?$args;
     access_log off;
+    log_not_found off;
 }
  
 # Deny all attempts to access hidden files such as .htaccess, .htpasswd, .DS_Store (Mac).
