@@ -130,6 +130,12 @@
   sudo dnf -y install redis
   sudo systemctl enable --now redis
   sudo systemctl status redis
+  
+# Configure Redis Remote Access
+  sudo vim /etc/redis.conf
+  bind 127.0.0.1 {我的ip}  ex: bind 127.0.0.1 192.168.121.233
+  
+  sudo systemctl restart redis
 
   ss -ant | grep 6379
   *check this
