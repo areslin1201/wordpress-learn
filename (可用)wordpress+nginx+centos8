@@ -119,7 +119,12 @@
 
 # 關閉 SELinux
   sudo setenforce 0
-
+  
+  永久關閉
+  sudo vim /etc/sysconfig/selinux
+  SELINUX=enforcing >> SELINUX=disabled
+  sudo reboot
+  
 
 # 安裝 Redis
   sudo dnf -y install redis
