@@ -15,6 +15,13 @@
   sudo systemctl enable --now php-fpm
   sudo systemctl status php-fpm
 
+  ***
+    upload_max_filesize = 16M
+    post_max_size = 32M
+    memory_limit = 256M
+    max_execution_time = 0
+    max_input_time = 0
+  ***
 
 # 安裝 Nginx
   sudo vim /etc/yum.repos.d/nginx.repo
