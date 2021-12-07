@@ -131,6 +131,8 @@ server {
     server_name  madjkw.com www.madjkw.com;
     index  index.php;
     root  /usr/share/nginx/html/wordpress;
+    
+    #client_max_body_size 200M;
 
     gzip on;
     gzip_comp_level    5;
