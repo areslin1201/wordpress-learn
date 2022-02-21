@@ -40,7 +40,7 @@
 
 
 # 安裝 MariaDb
-  sudo dnf -y install mariadb-server
+  sudo dnf -y install mariadb mariadb-server
   sudo systemctl enable --now mariadb
   sudo systemctl status mariadb
   sudo mysql_secure_installation
